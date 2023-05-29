@@ -1,16 +1,16 @@
 public class Polynomial {
 
-	private double[] coef;
+	double[] coef;
 
     // No-argument constructor
     public Polynomial() {
-        this.coef = new double[1];
-        this.coef[0] = 0.0;
+        coef = new double[1];
+        coef[0] = 0.0;
     }
 
     // Constructor with array of coefficients
-    public Polynomial(double[] coef) {
-        this.coef = coef;
+    public Polynomial(double[] new_coef) {
+        coef = new_coef;
     }
 	
 	public Polynomial add(Polynomial poly) {
@@ -32,8 +32,8 @@ public class Polynomial {
 	public double evaluate(double x) {
 		double result = 0.0;
 		
-		for (int i = 0; i < this.coef.length; i++) {
-			result += this.coef[i] * Math.pow(x, i);
+		for (int i = 0; i < coef.length; i++) {
+			result += coef[i] * Math.pow(x, i);
 		}
 		
 		return result;
