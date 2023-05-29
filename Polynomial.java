@@ -1,17 +1,19 @@
 public class Polynomial {
 
 	double[] coef;
-
-    // No-argument constructor
-    public Polynomial() {
-        coef = new double[1];
-        coef[0] = 0.0;
-    }
-
-    // Constructor with array of coefficients
-    public Polynomial(double[] new_coef) {
-        coef = new_coef;
-    }
+	
+	// No-argument constructor
+	public Polynomial() {
+		coef = new double[1];
+		for (int i = 0; i < coef.length; i++) {
+			coef[i] = 0.0;
+		}
+	}
+	
+	// Constructor with array of coefficients
+	public Polynomial(double[] new_coef) {
+		coef = new_coef;
+	}
 	
 	public Polynomial add(Polynomial poly) {
 		
