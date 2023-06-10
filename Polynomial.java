@@ -99,9 +99,19 @@ public class Polynomial {
 			
 			for (int i = 0; i < coef.length; i++) {
 				if (coef[i] < 0) {
-					sb.append(coef[i] + "x" + exp[i]);
+					// Add special case for exponent 0
+					if (exp[i] == 0) {
+						sb.append(coef[i]);
+					} else {
+						sb.append(coef[i] + "x" + exp[i]);
+					}
 				} else {
-					sb.append("+" + coef[i] + "x" + exp[i]);
+					// Add special case for exponent 0
+					if (exp[i] == 0) {
+						sb.append("+" + coef[i]);
+					} else {
+						sb.append("+" + coef[i] + "x" + exp[i]);
+					}
 				}
 			}
 			
