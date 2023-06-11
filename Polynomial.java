@@ -1,9 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Polynomial {
 
@@ -29,65 +29,48 @@ public class Polynomial {
 	// Constructor for the Polynomial class. 
 	// The constructor takes a File object as input which it uses to construct the polynomial.
 	public Polynomial(File file) {
-		try {
-			// Initialize a Scanner to read from the file
-			Scanner scanner = new Scanner(file);
+		try (BufferedReader input = new BufferedReader(new FileReader(file))) {
+			String line = input.readLine();
 			
-			// Read the first line of the file into a string, expecting it to be a polynomial
-			String polynomial = scanner.nextLine();
+			String[] polyTerms = line.split("(?=[+-])");
+			int polyLength = polyTerms.length;
 			
-			// Close the scanner to free resources
-			scanner.close();
+			double[] coefs = new double[polyLength];
+			int[] exps = new int[polyLength];
 			
-			// Initialize lists to hold the coefficients and exponents of the polynomial
-			List<Double> coefficients = new ArrayList<>();
-			List<Integer> exponents = new ArrayList<>();
-			
-			// Replace '-' characters with '+-' in the polynomial string to aid in splitting the terms correctly
-			polynomial = polynomial.replace("-", "+-");
-			
-			// Split the polynomial into individual terms based on the '+' character
-			String[] terms = polynomial.split("\\+");
-			
-			// For each term in the polynomial
-			for (String term : terms) {
-				// Split the term into its coefficient and exponent parts based on the 'x' character
-				String[] parts = term.split("x");
+			for (int i = 0; i < polyLength; i++) {
+				String term = polyTerms[i];
 				
-				// Declare and initialize the coefficient
-				double coef;
-				if (parts[0].isEmpty()) {
-					coef = 1.0; // If the part is empty, it means there's an implicit 1 coefficient
-				}
-				else {
-					coef = Double.parseDouble(parts[0]); // Otherwise, parse the coefficient part as a double
-				}
+				// Find the index of 'x' in the term
+				int indexOfX = term.indexOf('x');
 				
-				// Declare and initialize the exponent
-				int exp;
-				if (parts.length > 1) {
-					if (parts[1].isEmpty()) {
-						exp = 1; // If there is a second part but it's empty, it means there's an implicit 1 exponent
-					} else {
-						exp = Integer.parseInt(parts[1]); // Otherwise, parse the exponent part as an integer
-					}
+				if (indexOfX == -1) {
+					// Term does not contain 'x'
+					coefs[i] = Double.parseDouble(term);
+					exps[i] = 0;
 				} else {
-					exp = 0; // If there's no second part, it means the term doesn't have 'x', so the exponent is 0
+					// Term contains 'x'
+					if (term.charAt(0) == '-') {
+						// Negative coefficient
+						coefs[i] = -Double.parseDouble(term.substring(1, indexOfX));
+					} else {
+						// Positive coefficient
+						coefs[i] = Double.parseDouble(term.substring(0, indexOfX));
+					}
+					
+					exps[i] = Integer.parseInt(term.substring(indexOfX + 1));
 				}
-				
-				// Add the coefficient and exponent to their respective lists
-				coefficients.add(coef);
-				exponents.add(exp);
 			}
 			
-			// Convert the coefficient and exponent lists into arrays and assign them to this object's corresponding fields
-			this.coef = coefficients.stream().mapToDouble(d->d).toArray();
-			this.exp = exponents.stream().mapToInt(i->i).toArray();
+			this.coef = coefs;
+			this.exp = exps;
 			
-		} catch (FileNotFoundException e) {
-			// Print the stack trace if the file is not found
+			for (int i = 0; i < polyLength; i++) {
+				System.out.println(this.coef[i] + "x^" + this.exp[i]);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}	
 	}
 	
 	// Save the polynomial to a file
